@@ -12,10 +12,12 @@ namespace FlappyBirdNeuralNet
     public class Pipe
     {
         int gapsize;
-        public Sprite BottomPipe;
-        public Sprite TopPipe;
+        public Sprite BottomPart;
+        public Sprite TopPart;
         private int randomPlaceToPutGapPosition;
         public Rectangle HitBox { get; set; }
+        Rectangle topPipeBounds;
+        Rectangle bottomPipeBounds;
 
         public float GapY
         {
@@ -24,31 +26,31 @@ namespace FlappyBirdNeuralNet
                 return randomPlaceToPutGapPosition + gapsize / 2;
             }
         }
-        public Pipe(Texture2D texture, int x, Color color, Bird bird, Viewport viewport)
+        public Pipe(Texture2D texture, int x, Color color, float scaledBirdHeight, Viewport viewport, Random randomPlaceToPutGap)
         {
             //Color wil be green for pipes, no need to taken the color
-            gapsize = (int)(bird.Texture.Height * bird.Scale.Y) + 100;
+            gapsize = (int)(scaledBirdHeight * 6);
 
             int margin = 100;
-            Random randomPlaceToPutGap = new Random(Guid.NewGuid().GetHashCode());
+           
             randomPlaceToPutGapPosition = randomPlaceToPutGap.Next(margin, viewport.Height - gapsize - margin);
 
-            Rectangle topPipeBounds = new Rectangle(x, 0, 50, randomPlaceToPutGapPosition);
-            Rectangle bottomPipeBounds = new Rectangle(x, randomPlaceToPutGapPosition + gapsize, 50, viewport.Height - randomPlaceToPutGapPosition - gapsize);
+            topPipeBounds = new Rectangle(x, 0, 50, randomPlaceToPutGapPosition);
+            bottomPipeBounds = new Rectangle(x, randomPlaceToPutGapPosition + gapsize, 50, viewport.Height - randomPlaceToPutGapPosition - gapsize);
 
-            TopPipe = new Sprite(texture, new Vector2(topPipeBounds.X, topPipeBounds.Y), color, new Vector2(topPipeBounds.Width, topPipeBounds.Height));
-            BottomPipe = new Sprite(texture, new Vector2(bottomPipeBounds.X, bottomPipeBounds.Y), color, new Vector2(bottomPipeBounds.Width, bottomPipeBounds.Height));
+            TopPart = new Sprite(texture, new Vector2(topPipeBounds.X, topPipeBounds.Y), color, new Vector2(topPipeBounds.Width, topPipeBounds.Height));
+            BottomPart = new Sprite(texture, new Vector2(bottomPipeBounds.X, bottomPipeBounds.Y), color, new Vector2(bottomPipeBounds.Width, bottomPipeBounds.Height));
             
         }
         public void Update(GameTime gameTime, float speed)
         {
-            TopPipe.X -= speed;
-            BottomPipe.X -= speed;
+            TopPart.X -= speed;
+            BottomPart.X -= speed;
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            TopPipe.Draw(spriteBatch);
-            BottomPipe.Draw(spriteBatch);
+            TopPart.Draw(spriteBatch);
+            BottomPart.Draw(spriteBatch);
         }
     }
 }

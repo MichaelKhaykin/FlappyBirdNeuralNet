@@ -3,18 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace FlappyBirdNeuralNet
 {
     public class NeuralNetwork
     {
+        [JsonProperty]
         List<Layer> Layers;
+
+        [JsonProperty]
+        int[] layersAmount;
+
+        [JsonConstructor]
         public NeuralNetwork(int[] layersAmount)
         {
             if (layersAmount.Length < 2)
             {
                 return;
             }
+
+            this.layersAmount = layersAmount;
+
             Layers = new List<Layer>();
             for (int i = 0; i < layersAmount.Length; i++)
             {
@@ -78,8 +88,6 @@ namespace FlappyBirdNeuralNet
                 }
 
             }
-
-
             Layer lastLayer = Layers[Layers.Count - 1];
             float[] output = new float[lastLayer.NeuronCount];
 
@@ -91,7 +99,7 @@ namespace FlappyBirdNeuralNet
             return output;
         }
 
-        public void Mutate(float mututationRate)
+        public void Mutate(float mutationRate)
         {
             for (int i = 0; i < Layers.Count; i++)
             {
@@ -103,7 +111,7 @@ namespace FlappyBirdNeuralNet
                     //mutate bias here
                     Random random = new Random(Guid.NewGuid().GetHashCode());
                     double doesChange = random.NextDouble();
-                    if (doesChange < mututationRate)
+                    if (doesChange < mutationRate)
                     {
                         Layers[i].Neurons[j].Bias += (float)(random.Next(-1, 1) + random.NextDouble());
                     }
@@ -111,10 +119,9 @@ namespace FlappyBirdNeuralNet
                     for (int k = 0; k < Layers[i].Neurons[j].DendriteCount; k++)
                     {
                         doesChange = random.NextDouble();
-                        if (doesChange >= mututationRate) continue;
+                        if (doesChange >= mutationRate) continue;
 
                         //var dendDrite = neuron.Dendrites[i];
-
                         Layers[i].Neurons[j].Dendrites[k].Weight += (float)(random.Next(-1, 1) + random.NextDouble());
                     }
                 }
